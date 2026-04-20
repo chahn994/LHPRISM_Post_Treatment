@@ -1,6 +1,8 @@
 ---
 title: "LHPRISM Exploratory Analysis"
-format: docx
+format: 
+  docx:
+    toc: true
 editor: visual
 ---
 
@@ -60,6 +62,12 @@ lhprism_data$site <- str_extract(lhprism_data$site_code, "^[^_]+")
 ## Remove all rows that have NA for site
 lhprism_data <- lhprism_data %>%
   filter(!is.na(site))
+
+# Make a column for number of visits for each Site Code.
+lhprism_data <- lhprism_data %>%
+  group_by(site_code) %>%
+  mutate(tot_visits = length(unique(visit_date)))
+
 
 ```
 
@@ -127,6 +135,57 @@ ggplot(data = lhprism_data, aes(x = pu_count)) +
   scale_x_log10()
 ```
 
+Let's create a new variable that is the log10 of the pull-up count
+
+```{r}
+lhprism_data <- lhprism_data %>%
+  mutate(log_pu_count = log10(pu_count))
+
+# Replace -Inf with NA
+lhprism_data$log_pu_count[is.infinite(lhprism_data$log_pu_count)] <- NA
+
+lhprism_data %>% 
+  filter(pu_count > 0) %>%
+  ggplot(data = ., aes(x = log_pu_count)) +
+  geom_histogram()
+```
+
+Calculate the mean and confidence interval for the log_pu_count values
+
+```{r}
+log_pu_count_mean <- mean(lhprism_data$log_pu_count, na.rm = TRUE)
+log_pu_count_sd <- sd(lhprism_data$log_pu_count, na.rm = TRUE)
+
+log_pu_count_upperCI <- log_pu_count_mean + 1.96 * log_pu_count_sd / sqrt(sum(!is.na(lhprism_data$log_pu_count)))
+log_pu_count_lowerCI <- log_pu_count_mean - 1.96 * log_pu_count_sd / sqrt(sum(!is.na(lhprism_data$log_pu_count)))
+
+# Convert mean back to original scale
+10^log_pu_count_mean
+
+# Compare this to the mean and median of the original pu_count variable
+mean(lhprism_data$pu_count, na.rm = TRUE)
+median(lhprism_data$pu_count, na.rm = TRUE)
+
+```
+
+Is this different than what a group a volunteers may be able to pull-up in a day?
+
+```{r}
+volunteer_pu_count <- log10(150) # Estimate based on quick AI search
+```
+
+How many SDs away is the volunter pull-up count from our observed mean?
+
+```{r}
+(volunteer_pu_count - log_pu_count_mean) / log_pu_count_sd
+```
+
+What is the probability of observing our mean or something more extreme?
+
+```{r}
+2 * pnorm(q = abs((volunteer_pu_count - log_pu_count_mean) / log_pu_count_sd), lower.tail = FALSE)
+```
+
 ### Relationship between gross square feet searched vs treated
 
 ```{r}
@@ -169,7 +228,6 @@ lhprism_data %>%
   geom_bar(stat = "identity")
 ```
 
-
 ```{r}
 lhprism_data %>%
   group_by(species_code) %>%
@@ -207,4 +265,40 @@ lhprism_data %>%
   ) %>%
   arrange(desc(total_visits))
 ```
+
+
+## Change through time
+
+First, let's find out which species were noted as eradicated.
+Note that eradicated is considered any site that has no target plants found upon search on the third year after treatment, which corresponds to a `visit_status_num` value of 5.
+
+There are `r length(unique(lhprism_data$species_code))` unique species codes in the data set. 
+
+Of these, only three have any populations that were eradicated.
+
+```{r}
+unique(lhprism_data$species_code) # 85
+
+lhprism_data %>%
+  filter(visit_status_num == 5) %>%
+  select(species_code) %>%
+  unique()
+```
+
+Let's get some summaries.
+
+```{r}
+lhprism_data %>%
+  filter(!is.na(species_code)) %>%
+  group_by(species_code) %>%
+  summarise(
+    unique_populations = n_distinct(site_code),
+    total_visits = n(),
+    highest_visit_status = max(visit_status_num, na.rm = TRUE)
+  ) %>%
+  arrange(desc(total_visits))
+```
+
+
+
 

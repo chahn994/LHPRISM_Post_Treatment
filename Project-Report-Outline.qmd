@@ -112,17 +112,61 @@ The **Lower Hudson PRISM (LHPRISM)** covers the Lower Hudson Valley. It uses tra
 
     <https://www.nynhp.org/invasives/species-tiers-table/>
 
+
 ## Region of study
 
 -   Information about the Lower Hudson region (as defined by LHPRISM)
 -   Discussion of the climate and ecology of the region
 
+-   Location
+
+    -Southeastern New York (Westchester, Rockland, Putnam, Orange, parts of NYC)
+
+    -Includes Hudson River and estuary areas
+
+-   Climate:
+
+    -Temperate (4 seasons)
+
+    -Warm summers, cold winters
+
+    -Moderate rainfalls
+
+-   Ecology:
+
+    -Forests, wetlands, river systems
+
+    -High biodiversity
+
+-   Importance to project:
+
+    -Urban + natural mix (easier spread of invasive species)
+
+    -Dataset focuses on invasive species in this region
+
 ## Overview of the LHPRISM data set
 
 -   Description of the data set and its contents
+    -   An environmental monitoring dataset from the Lower Hudson Partnership for Regional Invasive Species Management focused on invasive species treatment in the Hudson Valley.
+
+    -   What each record represents: A plot or site where invasive species were identified, treated, and monitored over time (3-year follow-up).
+
+    -   Key variables: Location info ( site, participant) species present (abundance/cover) treatment type (chemical/method used) treatment timing (initial + follow-ups) monitoring outcomes (change in invasive presence over time) Missing/NULL values (HUGE PROBLEM WHAT TO SAY ABOUT MISSING DATA ITS EVERYWHERE)
 -   Description of data collection methods (will require communication with LHPRISM staff)
+    -   Field surveys conducted at designated plots, identification of invasive species and estimation of their abundance, application of treatment, follow up monitoring intervals (yearly for 3 years)
+
+    -   NEED to zoom with Brent (whether plots are randomly selected or targeted, this matters a lot, whether measurement methods are standardized)
+
+    -   More questions: what defines a “plot”, [**what do NULL values represent**]{.underline} ,monitoring consistency? known biases (sites chosen because they were heavily bad)
 -   Summary statistics and figures about major components of the data set (e.g., number of records, number of species, etc.)
+    -   Total number of rows, number of unique plots, number of invasive species tracked number of treatment types, time span
+
+    -   Figures? Histogram of number of species, count of treatments applied
+
+    -   [**Missing data visualizatio**n]{.underline}
 -   Should we put analyses of correlations and relationships among the variables in this section?
+    -   No, this is what data do we have not what does it tell us or what can we glean, **MISSSING DATA**
+
 
 ## Spatial distribution of the data
 
@@ -130,6 +174,10 @@ The **Lower Hudson PRISM (LHPRISM)** covers the Lower Hudson Valley. It uses tra
     -   Number of records per location
     -   Number of species per location
     -   Some summary of coverage percentages?
+-   Will use Leaflet to create maps in R
+    -   Map of all property locations using long and lat data in the Populations tab
+        -   Density map could reveal which areas are most treated
+    -   Map of all treatments, color-coded by species
 
 ## Analysis of time / treatment effort required to eradication
 
@@ -139,4 +187,70 @@ The **Lower Hudson PRISM (LHPRISM)** covers the Lower Hudson Valley. It uses tra
 -   Description of the methods used in this analysis
 -   Description of the results of this analysis
 
+    -   accelerated growth, previous exploratory analysis file
+            -   HEMA17 - Giant Hogweed
+            -   PUMO - Kudzu
+            -   CYSC4 - Scotch Broom
+            -   SAGL12 - Sticky Sage
+                -   CYSC4, SAGL12, LECU, PLEIO, POPE10, RULA, AREL8, HEMA17, ACAR10, VISI, COIN21, PUMO, ARIT, ILCR2, PHVI81, SYPA12, VIDI80, COKO2, PHVI81, SYPA12, AKQU, AREL8, SPJA, WISI, PHVI81, BRPA4, MISI, RAFIB, BRSY, HUJA, HEHE, FRAL4, WISTE - ALL EXTERMINATED
+    -   Brief overview of ecology of these particular species (add known methods of treatment, previous recommendation)
+        -   HEMA17 - Giant Hogweed (Heracleum mantegazzianum)
+            -   native to Eastern Europe/Western Asia, highly invasive in NE USA
+            -   thrives in rich, moist soil, prefers sunlight and tolerant of partial shade
+            -   found in river banks, streams, floodplains, roadsides + trafficked areas
+            -   biennial lifecycle, plants 2+ yrs old 10-15ft tall
+            -   1 plant can produce 20,000-50,000 seeds, spreading by water/wind and human activity
+            -   forms dense monocultures, increases erosion risk due to dying back in winter, leaves soil exposed along riverbanks
+            -   phototoxic sap - sever skin burns with sun exposure
+            -   treatment recommendation: chemical treatment in early spring, mechanical removal for small infestations
+        -   PUMO - Kudzu
+            -   native to East Asia, widespread in SE USA and migrating N
+            -   thrives on roadside, forest edges, warm and humid climates, prefers full sun, climbs to canopy
+            -   perennial vine, grows up to 1ft/day in optimal conditions
+            -   spreads vegetatively, rooting at nodes
+            -   forms dense monocultures, causes tree death by shading and structural stress
+            -   alters nutrient cycle by nitrogen fixation
+            -   treatment complex, requires multi-modal approach over multiple years
+        -   CYSC4 - Scotch Broom
+            -   Native to Europe, widespread invasiveness in PNW, California, and East Coast USA
+            -   prefers sandy soil and full sun, found on roadsides, logged forests, grassland
+            -   perennial shrub, lives up to 10-15 yrs
+            -   1 plant produces 1,000s of seeds
+            -   dense thickets, reduces habitat quality for native species, alters nutrient cycle by nitrogen fixation
+            -   seeds viable for 30+ yrs in soil makes eradication difficult
+            -   hand pulling for small infestations, chemical spray (glyphosate, triclopyr, basal bark treatment, stem cutting, foliar spray
+        -   SAGL12 - Sticky Sage
+            -   native to Europe and West Asia
+            -   prefers moist, well-drained soil, found in woodlands, shaded slopes, forest edges
+            -   perennial herb, blooms late summer
+            -   low ecological impact, coexists with native species
+            -   known treatment: handpulling for young pop
+-   Description of the methods used in this analysis
+    -   change in total plant count over consecutive visits
+    -   visit_date \* visit_status_num
+    -   maybe see if there are any patterns when sorting by herbicide?
+    -   how many times did they need to visit a plot before eradication: look at total number of visits, and population numbers
+-   Description of the results of this analysis
+    -   HEMA17
+
+        ```{r}
+        ```
+
+    -   PUMO
+
+        ```{r}
+        ```
+
+    -   CYSC4
+
+        ```{r}
+        ```
+
+    -   SAGL12
+
+        ```{r}
+        ```
+
 ## Conclusions and recommendations
+
+Written by all participants.
